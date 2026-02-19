@@ -1,47 +1,46 @@
 import type { Booking } from "./types"
 import { mockBookings } from "./mock-data"
+import { readDatabase, writeDatabase, initializeDatabase } from "./database"
+import { v4 as uuidv4 } from 'uuid'
 
-// Mock booking storage - in production, use a database
-export function getBookings(): Booking[] {
-  if (typeof window === "undefined") return mockBookings
-
-  const bookingsStr = localStorage.getItem("bookings")
-  if (!bookingsStr) {
-    localStorage.setItem("bookings", JSON.stringify(mockBookings))
-    return mockBookings
-  }
-
-  try {
-    return JSON.parse(bookingsStr)
-  } catch {
-    return mockBookings
-  }
+// Server-side booking functions using the new database implementation
+export async function getBookings(): Promise<Booking[]> {
+  await initializeDatabase();
+  const db = await readDatabase();
+  return db.bookings;
 }
 
-export function getUserBookings(userId: string): Booking[] {
-  return getBookings().filter((b) => b.userId === userId)
+export async function getUserBookings(userId: string): Promise<Booking[]> {
+  const bookings = await getBookings();
+  return bookings.filter((b) => b.userId === userId);
 }
 
-export function createBooking(booking: Omit<Booking, "id" | "bookingDate" | "status">): Booking {
-  const bookings = getBookings()
+export async function createBooking(booking: Omit<Booking, "id" | "bookingDate" | "status">): Promise<Booking> {
+  await initializeDatabase();
+  const db = await readDatabase();
+  
   const newBooking: Booking = {
     ...booking,
-    id: `book-${Date.now()}`,
+    id: uuidv4(),
     bookingDate: new Date().toISOString().split("T")[0],
     status: "confirmed",
   }
-  bookings.push(newBooking)
-  localStorage.setItem("bookings", JSON.stringify(bookings))
-  return newBooking
+  
+  db.bookings.push(newBooking);
+  await writeDatabase(db);
+  
+  return newBooking;
 }
 
-export function cancelBooking(bookingId: string): boolean {
-  const bookings = getBookings()
-  const booking = bookings.find((b) => b.id === bookingId)
-  if (booking) {
-    booking.status = "cancelled"
-    localStorage.setItem("bookings", JSON.stringify(bookings))
-    return true
+export async function cancelBooking(bookingId: string): Promise<boolean> {
+  await initializeDatabase();
+  const db = await readDatabase();
+  
+  const bookingIndex = db.bookings.findIndex((b) => b.id === bookingId);
+  if (bookingIndex !== -1) {
+    db.bookings[bookingIndex].status = "cancelled";
+    await writeDatabase(db);
+    return true;
   }
-  return false
+  return false;
 }

@@ -1,12 +1,15 @@
 import 'server-only';
 import type { User } from "./types";
-import { initializeDatabase } from "./database";
+import { initializeDatabase, readDatabase, writeDatabase } from "./database";
 import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function login(email: string, password: string): Promise<Omit<User, 'password'> | null> {
-  const db = await initializeDatabase();
-  const user = await db.get<User>('SELECT * FROM users WHERE email = ?', email);
-
+  await initializeDatabase(); // Ensure database is initialized
+  const db = await readDatabase();
+  
+  const user = db.users.find(u => u.email === email);
+  
   if (user && user.password && await bcrypt.compare(password, user.password)) {
     const { password: _, ...userWithoutPassword } = user;
     return userWithoutPassword;
@@ -15,24 +18,28 @@ export async function login(email: string, password: string): Promise<Omit<User,
 }
 
 export async function register(name: string, email: string, phone: string, password: string): Promise<Omit<User, 'password'>> {
-  const db = await initializeDatabase();
-  const hashedPassword = await bcrypt.hash(password, 10);
+  await initializeDatabase(); // Ensure database is initialized
+  const db = await readDatabase();
   
-  const result = await db.run(
-    'INSERT INTO users (name, email, phone, password, role) VALUES (?, ?, ?, ?, ?)',
+  // Check if user already exists
+  const existingUser = db.users.find(u => u.email === email);
+  if (existingUser) {
+    throw new Error("User already exists");
+  }
+  
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser: User = {
+    id: uuidv4(),
     name,
     email,
     phone,
-    hashedPassword,
-    'user'
-  );
+    password: hashedPassword,
+    role: 'user'
+  };
+  
+  db.users.push(newUser);
+  await writeDatabase(db);
 
-  const createdUser = await db.get<User>('SELECT * FROM users WHERE id = ?', result.lastID);
-
-  if (!createdUser) {
-    throw new Error("Failed to create user");
-  }
-
-  const { password: _, ...userWithoutPassword } = createdUser;
+  const { password: _, ...userWithoutPassword } = newUser;
   return userWithoutPassword;
 }

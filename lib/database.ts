@@ -1,59 +1,42 @@
-import sqlite3 from 'sqlite3';
-import { open, Database } from 'sqlite';
+import fs from 'fs/promises';
+import path from 'path';
+import type { User, Package as PackageType, Booking as BookingType } from './types';
 
-let db: Database | null = null;
-
-async function initializeDatabase() {
-  if (!db) {
-    db = await open({
-      filename: './mydatabase.sqlite',
-      driver: sqlite3.Database
-    });
-
-    await db.exec(`
-      CREATE TABLE IF NOT EXISTS users (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        phone TEXT NOT NULL,
-        password TEXT NOT NULL,
-        role TEXT NOT NULL DEFAULT 'user'
-      );
-
-      CREATE TABLE IF NOT EXISTS packages (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        destination TEXT NOT NULL,
-        duration TEXT NOT NULL,
-        price REAL NOT NULL,
-        originalPrice REAL,
-        rating REAL,
-        reviews INTEGER,
-        image TEXT,
-        description TEXT,
-        highlights TEXT,
-        inclusions TEXT,
-        exclusions TEXT,
-        itinerary TEXT,
-        category TEXT,
-        availableDates TEXT
-      );
-
-      CREATE TABLE IF NOT EXISTS bookings (
-        id TEXT PRIMARY KEY,
-        packageId TEXT NOT NULL,
-        userId TEXT NOT NULL,
-        travelers INTEGER NOT NULL,
-        startDate TEXT NOT NULL,
-        totalPrice REAL NOT NULL,
-        status TEXT NOT NULL DEFAULT 'pending',
-        bookingDate TEXT NOT NULL,
-        FOREIGN KEY (packageId) REFERENCES packages (id),
-        FOREIGN KEY (userId) REFERENCES users (id)
-      );
-    `);
-  }
-  return db;
+interface DatabaseSchema {
+  users: User[];
+  packages: PackageType[];
+  bookings: BookingType[];
 }
 
-export { initializeDatabase };
+// Initialize the database file if it doesn't exist
+async function initializeDatabase(): Promise<void> {
+  const dbPath = path.join(process.cwd(), 'mydatabase.json');
+  try {
+    await fs.access(dbPath);
+  } catch {
+    // File doesn't exist, create it with empty tables
+    const initialData: DatabaseSchema = {
+      users: [],
+      packages: [],
+      bookings: []
+    };
+    await fs.writeFile(dbPath, JSON.stringify(initialData, null, 2));
+  }
+}
+
+// Helper function to read the database
+async function readDatabase(): Promise<DatabaseSchema> {
+  const dbPath = path.join(process.cwd(), 'mydatabase.json');
+  const data = await fs.readFile(dbPath, 'utf8');
+  return JSON.parse(data);
+}
+
+// Helper function to write to the database
+async function writeDatabase(data: DatabaseSchema): Promise<void> {
+  const dbPath = path.join(process.cwd(), 'mydatabase.json');
+  await fs.writeFile(dbPath, JSON.stringify(data, null, 2));
+}
+
+// Export helper functions
+export { initializeDatabase, readDatabase, writeDatabase };
+export type { User, PackageType as Package, BookingType as Booking };

@@ -20,16 +20,28 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const user = getCurrentUser()
-    if (!user || !isAdmin(user)) {
-      router.push("/")
-      return
-    }
+    const fetchBookings = async () => {
+      const user = getCurrentUser()
+      if (!user || !isAdmin(user)) {
+        router.push("/")
+        return
+      }
 
-    const allBookings = getBookings()
-    setBookings(allBookings)
-    setFilteredBookings(allBookings)
-    setLoading(false)
+      try {
+        const response = await fetch('/api/bookings/all');
+        if (response.ok) {
+          const allBookings = await response.json();
+          setBookings(allBookings);
+          setFilteredBookings(allBookings);
+        }
+      } catch (error) {
+        console.error('Failed to fetch bookings:', error);
+      }
+      
+      setLoading(false)
+    };
+
+    fetchBookings();
   }, [router])
 
   useEffect(() => {

@@ -75,24 +75,34 @@ export function CheckoutForm() {
     // Simulate payment processing
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    // Create booking
-    const booking = createBooking({
-      packageId: pkg.id,
-      userId: user.id,
-      packageName: pkg.name,
-      destination: pkg.destination,
-      travelers,
-      startDate: selectedDate || pkg.availableDates[0],
-      totalPrice: pkg.price * travelers,
-      contactInfo: {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-      },
-    })
+    // Create booking via API
+    const response = await fetch('/api/bookings/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        packageId: pkg.id,
+        userId: user.id,
+        packageName: pkg.name,
+        destination: pkg.destination,
+        travelers,
+        startDate: selectedDate || pkg.availableDates[0],
+        totalPrice: pkg.price * travelers,
+        contactInfo: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+        },
+      })
+    });
 
-    setBookingId(booking.id)
-    setBookingComplete(true)
+    if (response.ok) {
+      const booking = await response.json();
+      setBookingId(booking.id)
+      setBookingComplete(true)
+    } else {
+      console.error('Failed to create booking');
+      // Handle error appropriately
+    }
     setIsProcessing(false)
   }
 

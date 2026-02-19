@@ -18,24 +18,52 @@ export function UserDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser) {
-      router.push("/auth?redirect=/account")
-      return
-    }
+    const fetchBookings = async () => {
+      const currentUser = getCurrentUser()
+      if (!currentUser) {
+        router.push("/auth?redirect=/account")
+        return
+      }
 
-    setUser(currentUser)
-    const userBookings = getUserBookings(currentUser.id)
-    setBookings(userBookings)
-    setLoading(false)
+      setUser(currentUser)
+      
+      try {
+        const response = await fetch(`/api/bookings/user?userId=${currentUser.id}`);
+        if (response.ok) {
+          const userBookings = await response.json();
+          setBookings(userBookings);
+        }
+      } catch (error) {
+        console.error('Failed to fetch bookings:', error);
+      }
+      
+      setLoading(false)
+    };
+
+    fetchBookings();
   }, [router])
 
-  const handleCancelBooking = (bookingId: string) => {
+  const handleCancelBooking = async (bookingId: string) => {
     if (confirm("Are you sure you want to cancel this booking?")) {
-      const success = cancelBooking(bookingId)
-      if (success && user) {
-        const updatedBookings = getUserBookings(user.id)
-        setBookings(updatedBookings)
+      try {
+        const response = await fetch(`/api/bookings/${bookingId}`, {
+          method: 'DELETE'
+        });
+        
+        if (response.ok) {
+          // Refresh bookings
+          if (user) {
+            const response = await fetch(`/api/bookings/user?userId=${user.id}`);
+            if (response.ok) {
+              const updatedBookings = await response.json();
+              setBookings(updatedBookings);
+            }
+          }
+        } else {
+          console.error('Failed to cancel booking');
+        }
+      } catch (error) {
+        console.error('Error cancelling booking:', error);
       }
     }
   }
