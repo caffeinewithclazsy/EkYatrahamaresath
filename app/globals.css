@@ -1,0 +1,250 @@
+/* eslint-disable-next-line at-rule-no-unknown */
+@tailwind base;
+/* eslint-disable-next-line at-rule-no-unknown */
+@tailwind components;
+/* eslint-disable-next-line at-rule-no-unknown */
+@tailwind utilities;
+
+:root {
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #1E293B;
+  --primary-foreground: #F8FAFC;
+  --secondary: #F1F5F9;
+  --secondary-foreground: #1E293B;
+  --muted: #F1F5F9;
+  --muted-foreground: #475569;
+  --accent: #F1F5F9;
+  --accent-foreground: #1E293B;
+  --destructive: #EF4444;
+  --destructive-foreground: #F8FAFC;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #94A3B8;
+  --radius: 1rem;
+
+  /* Premium travel booking color palette */
+  --gradient-primary-start: #7C3AED;
+  --gradient-primary-end: #EC4899;
+  --brand-teal: #06B6D4;
+  --brand-orange: #F97316;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #F43F5E;
+  --text-primary: #0F172A;
+  --text-secondary: #4B5563;
+  --text-tertiary: #6B7280;
+  --surface-light: #F8FAFC;
+  --surface-gradient-start: #F0F2FF;
+  --surface-gradient-end: #F0FFFF;
+  --rating: #F59E0B;
+
+  /* Font variables */
+  --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  /* Tailwind color variables */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  /* Exposing travel booking tokens to Tailwind */
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-hover: var(--brand-primary-hover);
+  --color-brand-primary-light: var(--brand-primary-light);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-hover: var(--brand-accent-hover);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-secondary-hover: var(--brand-secondary-hover);
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-surface-dark: var(--surface-dark);
+  --color-surface-light: var(--surface-light);
+  --color-rating: var(--rating);
+
+  /* Exposing premium gradient colors to Tailwind */
+  --color-gradient-primary-start: var(--gradient-primary-start);
+  --color-gradient-primary-end: var(--gradient-primary-end);
+  --color-brand-teal: var(--brand-teal);
+  --color-brand-orange: var(--brand-orange);
+
+  /* Chart colors */
+  --chart-1: #8B5CF6;
+  --chart-2: #EC4899;
+  --chart-3: #06B6D4;
+  --chart-4: #F97316;
+  --chart-5: #10B981;
+
+  /* Sidebar colors */
+  --sidebar: #F8FAFC;
+  --sidebar-foreground: #0F172A;
+  --sidebar-primary: #1E293B;
+  --sidebar-primary-foreground: #F8FAFC;
+  --sidebar-accent: #F1F5F9;
+  --sidebar-accent-foreground: #1E293B;
+  --sidebar-border: #E2E8F0;
+  --sidebar-ring: #94A3B8;
+}
+
+.dark {
+  --background: #0B1120;
+  --foreground: #F8FAFC;
+  --card: #0B1120;
+  --card-foreground: #F8FAFC;
+  --popover: #0B1120;
+  --popover-foreground: #F8FAFC;
+  --primary: #F8FAFC;
+  --primary-foreground: #0F172A;
+  --secondary: #1E293B;
+  --secondary-foreground: #F8FAFC;
+  --muted: #1E293B;
+  --muted-foreground: #94A3B8;
+  --accent: #1E293B;
+  --accent-foreground: #F8FAFC;
+  --destructive: #7F1D1D;
+  --destructive-foreground: #F8FAFC;
+  --border: #1E293B;
+  --input: #1E293B;
+  --ring: #334155;
+
+  /* Dark mode travel booking tokens */
+  --brand-primary: #8B5CF6;
+  --brand-primary-hover: #A78BFA;
+  --brand-primary-light: #3730A3;
+  --brand-accent: #F43F5E;
+  --brand-accent-hover: #FB7185;
+  --brand-secondary: #10B981;
+  --brand-secondary-hover: #34D399;
+  --success: #10B981;
+  --success-light: #059669;
+  --warning: #F59E0B;
+  --warning-light: #D97706;
+  --error: #F43F5E;
+  --error-light: #E11D48;
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-tertiary: #94A3B8;
+  --surface-dark: #1E293B;
+  --surface-light: #0F172A;
+  --rating: #FBBF24;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Added heading styles with Poppins font */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+}
+
+/* Added smooth transitions and animations */
+@layer utilities {
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+  }
+
+  .hover-glow-teal {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .hover-glow-teal:hover {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .hover-glow-orange {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .hover-glow-orange:hover {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .gradient-primary {
+    background: linear-gradient(90deg, var(--gradient-primary-start) 0%, var(--gradient-primary-end) 100%);
+  }
+
+  .gradient-hero {
+    background: linear-gradient(135deg, var(--gradient-primary-start) 0%, var(--gradient-primary-end) 100%);
+  }
+
+  .gradient-overlay {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.9) 0%, rgba(236, 72, 153, 0.9) 100%);
+  }
+
+  .gradient-surface {
+    background: linear-gradient(135deg, var(--surface-gradient-start) 0%, var(--surface-gradient-end) 100%);
+  }
+
+  .btn-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(124, 58, 237, 0);
+    }
+  }
+
+  .search-glow {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  }
+}
